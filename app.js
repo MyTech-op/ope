@@ -1,30 +1,66 @@
-import express from "express";
-import { config } from "dotenv";
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import { connection } from "./database/dbConnection.js";
-import { errorMiddleware } from "./middlewares/error.js";
-import userRouter from "./routes/userRouter.js";
-import { removeUnverifiedAccounts } from "./automation/removeUnverifiedAccounts.js";
+import dotenv from 'dotenv';
+import 'express-async-errors';
+import EventEmitter from 'events';
+import express from 'express';
+import http from 'http';
+import { Server as socketIo } from 'socket.io'; 
+import connectDB from './config/connect.js';
+import notFoundMiddleware from './middleware/not-found.js';
+import errorHandlerMiddleware from './middleware/error-handler.js';
 
-export const app = express();
-config({ path: "./config.env" });
+import swaggerUi from 'swagger-ui-express'
+import swaggerJsdoc  from 'swagger-jsdoc'
+import authMiddleware from './middleware/authentication.js';
+// Routers
+import authRouter from './routes/auth.js';
+import rideRouter from './routes/ride.js';
 
-app.use(
-  cors({
-    origin: [process.env.FRONTEND_URL],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+// Import socket handler
+import handleSocketConnection from './controllers/sockets.js';
 
-app.use(cookieParser());
+dotenv.config();
+
+EventEmitter.defaultMaxListeners = 20;
+
+const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1/user", userRouter);
+const server = http.createServer(app);
 
-removeUnverifiedAccounts();
-connection();
+const io = new socketIo(server, { cors: { origin: "*" } });
 
-app.use(errorMiddleware);
+// Attach the WebSocket instance to the request object
+app.use((req, res, next) => {
+  req.io = io;
+  return next();
+});
+
+// Initialize the WebSocket handling logic
+handleSocketConnection(io);
+
+// Routes
+app.use("/auth", authRouter);
+app.use("/ride", authMiddleware, rideRouter);
+// app.use("/ride", rideRouter);
+
+// Middleware
+// app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    server.listen(process.env.PORT || 3000, "0.0.0.0", () =>
+      console.log(
+        `HTTP server is running on port http://localhost:${process.env.PORT || 3000}`
+      )
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+start();
