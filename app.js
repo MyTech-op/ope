@@ -7,9 +7,7 @@ import { Server as socketIo } from 'socket.io';
 import connectDB from './config/connect.js';
 import notFoundMiddleware from './middleware/not-found.js';
 import errorHandlerMiddleware from './middleware/error-handler.js';
-
-import swaggerUi from 'swagger-ui-express'
-import swaggerJsdoc  from 'swagger-jsdoc'
+ 
 import authMiddleware from './middleware/authentication.js';
 // Routers
 import authRouter from './routes/auth.js';
@@ -46,9 +44,7 @@ app.use("/ride", authMiddleware, rideRouter);
 // Middleware
 // app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
-
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+ 
 
 const start = async () => {
   try {
