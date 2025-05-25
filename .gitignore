@@ -1,5 +1,7 @@
 /node_modules
 .env
+.env-tempate copy
 .DS_Store
 npm-debug.log
 yarn-error.log
+/uploads

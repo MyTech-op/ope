@@ -7,11 +7,13 @@ import { Server as socketIo } from 'socket.io';
 import connectDB from './config/connect.js';
 import notFoundMiddleware from './middleware/not-found.js';
 import errorHandlerMiddleware from './middleware/error-handler.js';
+
  
 import authMiddleware from './middleware/authentication.js';
 // Routers
 import authRouter from './routes/auth.js';
 import rideRouter from './routes/ride.js';
+import uploadRouter from './routes/upload.js';
 
 // Import socket handler
 import handleSocketConnection from './controllers/sockets.js';
@@ -22,7 +24,7 @@ EventEmitter.defaultMaxListeners = 20;
 
 const app = express();
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 const server = http.createServer(app);
 
 const io = new socketIo(server, { cors: { origin: "*" } });
@@ -35,7 +37,7 @@ app.use((req, res, next) => {
 
 // Initialize the WebSocket handling logic
 handleSocketConnection(io);
-
+app.use('/upload', uploadRouter);
 // Routes
 app.use("/auth", authRouter);
 app.use("/ride", authMiddleware, rideRouter);
@@ -45,7 +47,6 @@ app.use("/ride", authMiddleware, rideRouter);
 // app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
  
-
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
