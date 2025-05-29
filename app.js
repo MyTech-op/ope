@@ -7,14 +7,12 @@ import { Server as socketIo } from 'socket.io';
 import connectDB from './config/connect.js';
 import notFoundMiddleware from './middleware/not-found.js';
 import errorHandlerMiddleware from './middleware/error-handler.js';
-
- 
+//  import { errorMiddleware } from "./middlewares/error.js";
 import authMiddleware from './middleware/authentication.js';
 // Routers
 import authRouter from './routes/auth.js';
 import rideRouter from './routes/ride.js';
 import uploadRouter from './routes/upload.js';
-
 // Import socket handler
 import handleSocketConnection from './controllers/sockets.js';
 
@@ -27,7 +25,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const server = http.createServer(app);
 
-const io = new socketIo(server, { cors: { origin: "*" } });
+// const io = new Server(server, {
+//   cors: {
+//     origin: '*', // Adjust this in production
+//   }
+// });
 
 // Attach the WebSocket instance to the request object
 app.use((req, res, next) => {
@@ -36,7 +38,7 @@ app.use((req, res, next) => {
 });
 
 // Initialize the WebSocket handling logic
-handleSocketConnection(io);
+// handleSocketConnection(io);
 app.use('/upload', uploadRouter);
 // Routes
 app.use("/auth", authRouter);
@@ -45,7 +47,38 @@ app.use("/ride", authMiddleware, rideRouter);
 
 // Middleware
 // app.use(notFoundMiddleware);
+
+
 app.use(errorHandlerMiddleware);
+// app.use(errorMiddleware);
+
+ 
+
+ 
+const io = new socketIo(server, {
+  cors: {
+    origin: '*', // Adjust this in production
+  }
+});
+
+app.get('/', (req, res) => {
+  res.send('Server is alive!');
+});
+
+io.on('connection', (socket) => {
+  console.log('Socket connected:', socket.id);
+  socket.emit('hello', 'Socket.IO is working!');
+
+  socket.on('ping-test', (msg) => {
+    console.log('Received ping:', msg);
+    socket.emit('pong-test', 'pong');
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected:', socket.id);
+  });
+});
+ 
  
 const start = async () => {
   try {
