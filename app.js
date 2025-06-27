@@ -19,6 +19,8 @@ import uploadRouter from './routes/upload.js';
 import handleSocketConnection from './controllers/sockets.js';
 import News from "./models/News.js";
 // const path = require("path");
+import fs from 'fs';
+// import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,6 +44,28 @@ const server = http.createServer(app);
 app.use((req, res, next) => {
   req.io = io;
   return next();
+});
+
+const assetLinksPath = path.join(__dirname, '.well-known', 'assetlinks.json');
+if (fs.existsSync(assetLinksPath)) {
+  console.log('✅ assetlinks.json found at:', assetLinksPath);
+} else {
+  console.error('❌ assetlinks.json not found. Make sure the file exists at:', assetLinksPath);
+}
+
+app.get('/.well-known/assetlinks.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.sendFile(assetLinksPath);
+});
+
+app.get('/.well-known/test', async (req, res) => {
+  try {
+    const data = await fs.promises.readFile(assetLinksPath, 'utf-8');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(data);
+  } catch (e) {
+    res.status(404).send({ error: 'assetlinks.json not found or unreadable' });
+  }
 });
 
 app.use("/.well-known", express.static(path.join(__dirname, "well-known")));
