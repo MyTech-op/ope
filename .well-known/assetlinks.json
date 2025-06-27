@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sena.ambitionchela.ambitionchela",
+      "sha256_cert_fingerprints": [
+        "BE:B5:52:9D:75:C7:E0:09:79:2C:F5:42:3E:7C:22:82:82:CE:87:57:EB:0E:C3:83:DB:8D:60:C2:F0:C5:52:56"
+      ]
+    }
+  }
+]

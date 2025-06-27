@@ -3,67 +3,93 @@ import { StatusCodes } from "http-status-codes";
 import { BadRequestError, UnauthenticatedError } from "../errors/index.js";
 import jwt from "jsonwebtoken";
 
-export const auth = async (req, res) => {
-  const { phone, role } = req.body;
+export const register = async (req, res) => {
+  const { phone, role, email, password } = req.body;
 
-  if (!phone) {
-    throw new BadRequestError("Phone number is required");
-  }
-
+  if (!phone) throw new BadRequestError("Phone number is required");
+  if (!password) throw new BadRequestError("Password is required");
   if (!role || !["customer", "rider"].includes(role)) {
     throw new BadRequestError("Valid role is required (customer or rider)");
   }
 
-  try {
-    let user = await User.findOne({ phone });
+  let user = await User.findOne({ phone });
 
-    if (user) {
-      if (user.role !== role) {
-        throw new BadRequestError("Phone number and role do not match");
-      }
-
-      const accessToken = user.createAccessToken();
-      const refreshToken = user.createRefreshToken();
-
-      return res.status(StatusCodes.OK).json({
-        message: "User logged in successfully",
-        user,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
+  if (user) {
+    if (user.role !== role) {
+      throw new BadRequestError("Phone number and role do not match");
     }
+    throw new BadRequestError("User already exists");
+  }
 
-    user = new User({
-      phone,
-      role,
-    });
+  user = new User({ phone, email, role, password });
 
-    await user.save();
+  const accessToken = user.createAccessToken();
+  const refreshToken = user.createRefreshToken();
+  user.refreshToken = refreshToken;
 
-    const accessToken = user.createAccessToken();
-    const refreshToken = user.createRefreshToken();
+  await user.save();
 
-    res.status(StatusCodes.CREATED).json({
-      message: "User created successfully",
-      user,
+  return res.status(StatusCodes.OK).json({
+    statusCode: StatusCodes.OK,
+    statusMessage: "Success",
+    message: "User Registerd  successfully",
+    data: {
+      id: user._id,
+      phone: user.phone,
+      role: user.role,
+      email: user.email,
       access_token: accessToken,
       refresh_token: refreshToken,
-    });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+    },
+  });
 };
 
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get all users
- *     responses:
- *       200:
- *         description: Success
- */
+
+export const login = async (req, res) => {
+  const { phone, role, password } = req.body;
+
+  if (!phone) throw new BadRequestError("Phone number is required");
+  if (!password) throw new BadRequestError("Password is required");
+  if (!role || !["customer", "rider"].includes(role)) {
+    throw new BadRequestError("Valid role is required (customer or rider)");
+  }
+
+  const user = await User.findOne({ phone }).select("+password");
+
+  if (!user || user.role !== role) {
+    throw new BadRequestError("Invalid phone or role");
+  }
+
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    throw new BadRequestError("Invalid password");
+  }
+
+  const accessToken = user.createAccessToken();
+  let refreshToken = user.refreshToken;
+
+  // Optional: Regenerate refreshToken if expired or not present
+  if (!refreshToken) {
+    refreshToken = user.createRefreshToken();
+    user.refreshToken = refreshToken;
+    await user.save();
+  }
+
+  res.status(StatusCodes.OK).json({
+    statusCode: StatusCodes.OK,
+    statusMessage: "Success",
+    message: "User logged in successfully",
+    data: {
+      id: user._id,
+      phone: user.phone,
+      role: user.role,
+      email: user.email,
+    },
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  });
+};
+
 
 export const refreshToken = async (req, res) => {
   const { refresh_token } = req.body;

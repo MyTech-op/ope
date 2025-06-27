@@ -1,4 +1,5 @@
 import Ride from "../models/Ride.js";
+import News from "../models/News.js";
 import { BadRequestError, NotFoundError } from "../errors/index.js";
 import { StatusCodes } from "http-status-codes";
 import {
@@ -165,3 +166,54 @@ export const getMyRides = async (req, res) => {
     throw new BadRequestError("Failed to retrieve rides");
   }
 };
+
+
+
+
+
+
+export const createNews = async (req, res) => {
+  const { title, category } = req.body;
+
+  if (!title || !category) {
+    throw new BadRequestError("category are required");
+  }
+  
+
+  try {
+    
+
+    const news = new News({
+      title,
+      category,
+       
+    });
+
+    await news.save();
+
+    res.status(StatusCodes.CREATED).json({
+      message: "News created successfully",
+      news,
+    });
+  } catch (error) {
+    console.error(error);
+    throw new BadRequestError("Failed to create news");
+  }
+};
+
+
+export const getAllNews = async (req, res) => {
+  try {
+    const newsList = await News.find().sort({ createdAt: -1 }); // newest first
+
+    res.status(StatusCodes.OK).json({
+      count: newsList.length,
+      news: newsList,
+    });
+  } catch (error) {
+    console.error(error);
+    throw new BadRequestError("Failed to fetch news list");
+  }
+};
+
+ 

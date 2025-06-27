@@ -1,0 +1,51 @@
+{
+    "message": "User logged in successfully",
+    "user": {
+        "_id": "6845525ccc09af73ad4be236",
+        "email": "shasssss@gmail.com",
+        "role": "rider",
+        "phone": "9841932343",
+        "createdAt": "2025-06-08T09:05:32.506Z",
+        "updatedAt": "2025-06-08T09:05:32.506Z",
+        "__v": 0
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDU1MjVjY2MwOWFmNzNhZDRiZTIzNiIsInBob25lIjoiOTg0MTkzMjM0MyIsImlhdCI6MTc0OTM3MzU0NiwiZXhwIjoxNzQ5NzE5MTQ2fQ.EfOLdECMaXwIjR7ce7JS_NoI_PkI7U2jSOW70Djigjw",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDU1MjVjY2MwOWFmNzNhZDRiZTIzNiIsInBob25lIjoiOTg0MTkzMjM0MyIsImlhdCI6MTc0OTM3MzU0NiwiZXhwIjoxNzUxOTY1NTQ2fQ.bR4FFYpKR3v_fMaSSJq_LjkM7xIrJHZwNhUXDGKY-NQ"
+}
+
+
+
+{
+    "message": "User created successfully",
+    "user": {
+        "email": "shasssss@gmail.com",
+        "role": "rider",
+        "phone": "9841932340",
+        "_id": "684552a3cc09af73ad4be23d",
+        "createdAt": "2025-06-08T09:06:43.703Z",
+        "updatedAt": "2025-06-08T09:06:43.703Z",
+        "__v": 0
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDU1MmEzY2MwOWFmNzNhZDRiZTIzZCIsInBob25lIjoiOTg0MTkzMjM0MCIsImlhdCI6MTc0OTM3MzYwMywiZXhwIjoxNzQ5NzE5MjAzfQ.R8daHehjqQYpGn2VoNAfpJO3_78Qtw_g1leQAPrrDTo",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDU1MmEzY2MwOWFmNzNhZDRiZTIzZCIsInBob25lIjoiOTg0MTkzMjM0MCIsImlhdCI6MTc0OTM3MzYwMywiZXhwIjoxNzUxOTY1NjAzfQ.4CQHwsEpvU2IBIISbcSTflx6g4hBd2zfm7iN3-1RW5g"
+}
+
+
+{
+    "message": "User logged in successfully",
+    "user": {
+        "_id": "684552a3cc09af73ad4be23d",
+        "email": "shasssss@gmail.com",
+        "role": "rider",
+        "phone": "9841932340",
+        "createdAt": "2025-06-08T09:06:43.703Z",
+        "updatedAt": "2025-06-08T09:06:43.703Z",
+        "__v": 0
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDU1MmEzY2MwOWFmNzNhZDRiZTIzZCIsInBob25lIjoiOTg0MTkzMjM0MCIsImlhdCI6MTc0OTM3MzcwOCwiZXhwIjoxNzQ5NzE5MzA4fQ.y-jehnWY5LnfJZ1wAexv25SfOSW0-y_Vp-_Cr_hm3Oo",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDU1MmEzY2MwOWFmNzNhZDRiZTIzZCIsInBob25lIjoiOTg0MTkzMjM0MCIsImlhdCI6MTc0OTM3MzcwOCwiZXhwIjoxNzUxOTY1NzA4fQ.8fyHTUAZ2P1K88qCSfRPwpvdeMYc0njm772M3iBgA_Q"
+}
+ 
+
+
+

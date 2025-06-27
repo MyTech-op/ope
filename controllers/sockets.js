@@ -111,6 +111,16 @@ const handleSocketConnection = (io) => {
           socket.emit("error", { message: "Error searching for rider" });
         }
       });
+
+      socket.on("getOpenRides", async () => {
+  try {
+    const openRides = await Ride.find({ rider: null }).populate("customer");
+    socket.emit("openRidesList", openRides);
+  } catch (error) {
+    console.error("Error fetching open rides:", error);
+    socket.emit("error", { message: "Could not fetch open rides" });
+  }
+});
     }
 
     socket.on("subscribeToriderLocation", (riderId) => {

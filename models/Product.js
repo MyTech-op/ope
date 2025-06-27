@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
   licence: {
     type: String,
     required: true,
-    enum: ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'], // restrict to image types
+    enum: ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'], 
   }
 }, {
   timestamps: true

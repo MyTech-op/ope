@@ -15,9 +15,11 @@ import rideRouter from './routes/ride.js';
 import uploadRouter from './routes/upload.js';
 // Import socket handler
 import handleSocketConnection from './controllers/sockets.js';
+import News from "./models/News.js";
+
+
 
 dotenv.config();
-
 EventEmitter.defaultMaxListeners = 20;
 
 const app = express();
@@ -37,6 +39,7 @@ app.use((req, res, next) => {
   return next();
 });
 
+app.use("/.well-known", express.static(path.join(__dirname, "well-known")));
 // Initialize the WebSocket handling logic
 // handleSocketConnection(io);
 app.use('/upload', uploadRouter);
@@ -51,9 +54,7 @@ app.use("/ride", authMiddleware, rideRouter);
 
 app.use(errorHandlerMiddleware);
 // app.use(errorMiddleware);
-
  
-
  
 const io = new socketIo(server, {
   cors: {
@@ -64,6 +65,27 @@ const io = new socketIo(server, {
 app.get('/', (req, res) => {
   res.send('Server is alive!');
 });
+
+
+// io.on("connection", (socket) => {
+//   console.log("Socket connecteddddd:", socket.id);
+
+//   socket.on("getallnews", async () => {
+//     try {
+//       console.log("📩 Received 'getallnews' event");
+//       const newsList = await News.find().sort({ createdAt: -1 });
+//       socket.emit("newslist", newsList); // emit back only to the requester
+//     } catch (err) {
+//       console.error("Failed to fetch news for socket:", err);
+//       socket.emit("newslist", { error: "Failed to fetch news" });
+//     }
+//   });
+
+//   socket.on("disconnect", (reason) => {
+//       console.log(`Socket disconnected: ${socket.id}, reason: ${reason}`);
+//   });
+// });
+
 
 io.on('connection', (socket) => {
   console.log('Socket connected:', socket.id);
