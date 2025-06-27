@@ -40,6 +40,14 @@ app.use((req, res, next) => {
 });
 
 app.use("/.well-known", express.static(path.join(__dirname, "well-known")));
+
+app.get("/deeplink-data", (req, res) => {
+  res.json({
+    message: "Deep link successful!",
+    timestamp: new Date().toISOString(),
+    userId: req.query.user || "anonymous"
+  });
+});
 // Initialize the WebSocket handling logic
 // handleSocketConnection(io);
 app.use('/upload', uploadRouter);
