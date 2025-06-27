@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import 'express-async-errors';
 import EventEmitter from 'events';
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import http from 'http';
 import { Server as socketIo } from 'socket.io'; 
 import connectDB from './config/connect.js';
@@ -16,10 +18,13 @@ import uploadRouter from './routes/upload.js';
 // Import socket handler
 import handleSocketConnection from './controllers/sockets.js';
 import News from "./models/News.js";
+// const path = require("path");
 
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
+EventEmitter.defaultMaxListeners = 20;
 EventEmitter.defaultMaxListeners = 20;
 
 const app = express();
