@@ -70,13 +70,20 @@ app.get('/.well-known/test', async (req, res) => {
 
 app.use("/.well-known", express.static(path.join(__dirname, "well-known")));
 
-app.get("/deeplink-data", (req, res) => {
+app.get("/deeplink-data/product-:id", (req, res) => {
+  const { id } = req.params;
   res.json({
-    message: "Deep link successful!",
-    timestamp: new Date().toISOString(),
-    userId: req.query.user || "anonymous"
+    [`data-${id}`]: {
+      productId: id,
+      name: `test_${id}`,
+      desctptin: `desctiotnio_${id}`,
+      timestamp: new Date().toISOString(),
+      userId: req.query.user || "anonymous"
+    }
   });
 });
+
+
 // Initialize the WebSocket handling logic
 // handleSocketConnection(io);
 app.use('/upload', uploadRouter);
